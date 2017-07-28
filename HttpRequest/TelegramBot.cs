@@ -10,6 +10,7 @@ using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.InputMessageContents;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot;
+using HttpRequest.Config;
 
 namespace HttpRequest
 {
@@ -146,6 +147,46 @@ namespace HttpRequest
                     TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot 'level' action " + ex.Message);
                 }
             }
+            else if (message.Text.StartsWith("/setgameid"))
+            {
+                var id = message.Text.Substring(11);
+                // Get the code
+                Settings.GameUrl = id;
+
+                SendCodeResult("Game id is set to " + id);
+            }
+            else if (message.Text.StartsWith("/setdomain"))
+            {
+                var domain = message.Text.Substring(11);
+                // Set game domain (host)
+                Settings.GameHost = domain;
+
+                SendCodeResult("Game domain is set to " + domain);
+            }
+            else if (message.Text.StartsWith("/setlogin"))
+            {
+                var login = message.Text.Substring(10);
+                // Set game domain (host)
+                Settings.Login = login;
+
+                SendCodeResult("User login is set to " + login);
+            }
+            else if (message.Text.StartsWith("/setpassword"))
+            {
+                var pass = message.Text.Substring(13);
+                // Set game domain (host)
+                Settings.Password = pass;
+
+                SendCodeResult("User password is set to " + pass);
+            }
+            else if (message.Text.StartsWith("/setgamefullurl"))
+            {
+                var url = message.Text.Substring(16);
+                // Set game domain (host)
+                Settings.gameUrl = url;
+
+                SendCodeResult("Game url is set to " + url);
+            }
             else if (message.Text.StartsWith("/photo")) // send a photo
             {
                 await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
@@ -164,12 +205,20 @@ namespace HttpRequest
             else
             {
                 var usage = @"Usage:
+*>>> Main commands <<<*
 & - send code
+&& - send several codes separated by comma
 /monitor - watch levels
 /level - get current level
+*>>> Configuration commands <<<*
+/setlogin - change bot login *НЕ ТРОГАЙ :)*
+/setpassword - change bot password *НЕ ТРОГАЙ :)*
+/setdomain - change EN domain *НЕ ТРОГАЙ :)*
+/setgameid - change game id *НЕ ТРОГАЙ :)*
+/setgamefullurl - change game url *НЕ ТРОГАЙ :)*
 ";
 
-                await Bot.SendTextMessageAsync(message.Chat.Id, usage);
+                await Bot.SendTextMessageAsync(message.Chat.Id, usage, ParseMode.Markdown);
             }
         }
 

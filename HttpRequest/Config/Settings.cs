@@ -10,12 +10,20 @@ namespace HttpRequest.Config
     {
         private static string login = "stgr";
         private static string password = "gfvznm12";
-        private static string siteUrl = "http://demo.en.cx/Login.aspx";
-        private static string gameUrl = "http://demo.en.cx/gameengines/encounter/play/27060";
+        private static string siteUrl = "http://" + GameHost + "/Login.aspx";
+        public static string gameUrl = "http://demo.en.cx/gameengines/encounter/play/27060";
         private static int levelId = -1;
         private static int levelNumber = 1;
+        private static string gameHost = "demo.en.cx";
 
-        public static string GameHost = "demo.en.cx";
+        public static string GameHost
+        {
+            get { return Settings.gameHost; }
+            set {
+                Settings.gameHost = value;
+                Settings.siteUrl = "http://" + value + "/Login.aspx";
+            }
+        }
 
         public static int LevelId
         {
@@ -49,7 +57,9 @@ namespace HttpRequest.Config
         public static string GameUrl
         {
             get { return Settings.gameUrl; }
-            set { Settings.gameUrl = value; }
+            set {
+                Settings.gameUrl = "http://" + gameHost + "/gameengines/encounter/play/" + value;
+            }
         }
     }
 }
