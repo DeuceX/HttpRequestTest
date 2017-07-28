@@ -105,6 +105,9 @@ namespace HttpRequest
                 {
                     _codes.Clear();
                     _codesArchive.Clear();
+                    if (Settings.LevelNumber != 1)
+                        TelegramBot.SendCodeResult("Хороши-картоши! Новый уровень!" +
+                            " \U0001F389\U0001F389\U0001F389\U0001F389\U0001F389");
                 }
                 
                 Settings.LevelNumber = LevelNumber;

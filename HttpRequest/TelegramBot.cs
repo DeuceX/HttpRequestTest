@@ -15,7 +15,7 @@ namespace HttpRequest
 {
     class TelegramBot
     {
-        private static TelegramEnCommunicator TelEnComm = new TelegramEnCommunicator();
+        private static TelegramEnCommunicator TelEnComm;
         private static readonly TelegramBotClient Bot = new TelegramBotClient("215890940:AAHvKbm07EZyovI6TSLPyrxz3WNQ9DDJe9Q");
         private static long MainChatId = 0;
 
@@ -86,6 +86,9 @@ namespace HttpRequest
             // Recieve code
             if (message.Text.StartsWith("&"))
             {
+                if (TelEnComm == null)
+                    TelEnComm = new TelegramEnCommunicator();
+
                 // Get the code
                 String code = message.Text.Substring(1);
 
@@ -93,10 +96,16 @@ namespace HttpRequest
             }
             else if (message.Text.StartsWith("/monitor"))
             {
+                if (TelEnComm == null)
+                    TelEnComm = new TelegramEnCommunicator();
+
                 TelEnComm.StartMonitoring();
             }
             else if (message.Text.StartsWith("/level"))
             {
+                if (TelEnComm == null)
+                    TelEnComm = new TelegramEnCommunicator();
+
                 TelEnComm.GetCurrentLevel();
             }
             else if (message.Text.StartsWith("/photo")) // send a photo
