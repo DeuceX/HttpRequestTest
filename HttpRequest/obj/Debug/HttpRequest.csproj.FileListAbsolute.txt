@@ -1,0 +1,16 @@
+D:\Local\Library\HttpRequest\HttpRequest\obj\Debug\HttpRequest.csprojResolveAssemblyReference.cache
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\HttpRequest.exe.config
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\HttpRequest.exe
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\HttpRequest.pdb
+D:\Local\Library\HttpRequest\HttpRequest\obj\Debug\HttpRequest.exe
+D:\Local\Library\HttpRequest\HttpRequest\obj\Debug\HttpRequest.pdb
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\RestSharp.dll
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\RestSharp.xml
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\HtmlAgilityPack.dll
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\HtmlAgilityPack.xml
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\HtmlAgilityPack.CssSelectors.dll
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\HtmlAgilityPack.CssSelectors.pdb
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\Newtonsoft.Json.dll
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\Telegram.Bot.dll
+D:\Local\Library\HttpRequest\HttpRequest\bin\Debug\Newtonsoft.Json.xml
