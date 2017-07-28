@@ -84,29 +84,67 @@ namespace HttpRequest
             if (message == null || message.Type != MessageType.TextMessage) return;
 
             // Recieve code
-            if (message.Text.StartsWith("&"))
+            if (message.Text.StartsWith("&&"))
             {
-                if (TelEnComm == null)
-                    TelEnComm = new TelegramEnCommunicator();
+                try
+                {
+                    if (TelEnComm == null)
+                        TelEnComm = new TelegramEnCommunicator();
 
-                // Get the code
-                String code = message.Text.Substring(1);
+                    // Get the codes
+                    String codes = message.Text.Substring(2);
 
-                TelEnComm.QueueCode(code);
+                    TelEnComm.QueueCodes(codes);
+                }
+                catch (Exception ex)
+                {
+                    TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot '&&' action " + ex.Message);
+                }
+            }
+            else if (message.Text.StartsWith("&"))
+            {
+                try
+                {
+                    if (TelEnComm == null)
+                        TelEnComm = new TelegramEnCommunicator();
+
+                    // Get the code
+                    String code = message.Text.Substring(1);
+
+                    TelEnComm.QueueCode(code);
+                }
+                catch (Exception ex)
+                {
+                    TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot '&' action " + ex.Message);
+                }
             }
             else if (message.Text.StartsWith("/monitor"))
             {
-                if (TelEnComm == null)
-                    TelEnComm = new TelegramEnCommunicator();
+                try
+                {
+                    if (TelEnComm == null)
+                        TelEnComm = new TelegramEnCommunicator();
 
-                TelEnComm.StartMonitoring();
+                    TelEnComm.StartMonitoring();
+                }
+                catch (Exception ex)
+                {
+                    TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot 'monitor' action " + ex.Message);
+                }
             }
             else if (message.Text.StartsWith("/level"))
             {
-                if (TelEnComm == null)
-                    TelEnComm = new TelegramEnCommunicator();
+                try
+                {
+                    if (TelEnComm == null)
+                        TelEnComm = new TelegramEnCommunicator();
 
-                TelEnComm.GetCurrentLevel();
+                    TelEnComm.GetCurrentLevel();
+                }
+                catch (Exception ex)
+                {
+                    TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot 'level' action " + ex.Message);
+                }
             }
             else if (message.Text.StartsWith("/photo")) // send a photo
             {
@@ -143,7 +181,15 @@ namespace HttpRequest
 
         public static async void SendCodeResult(string result)
         {
-            await Bot.SendTextMessageAsync(MainChatId, result, ParseMode.Markdown);
+            try
+            {
+                if (result != "" && result != null && MainChatId != 0)
+                    await Bot.SendTextMessageAsync(MainChatId, result, ParseMode.Markdown);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception @ TelegramBot.SendCodeResult() " + ex.Message);
+            }
         }
 
     }

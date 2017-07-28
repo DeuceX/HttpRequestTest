@@ -14,22 +14,34 @@ namespace HttpRequest
         private Queue<string> _codes = new Queue<string>();
         private List<string> _codesArchive = new List<string>();
         private int LevelInfoSent = -1;
+        private Random rnd = new Random();
 
         public TelegramEnCommunicator ()
         {
             _postMan = new Postman();
             SendEmptyCode(false);
+
+            Thread t = new Thread(MonitorCodes);
+            t.Start();
         }
 
         public void QueueCode(string code)
         {
             _codes.Enqueue(code);
-            SendCode();
+        }
+
+        public void QueueCodes(string codes)
+        {
+            string[] arr = codes.Split(',');
+            for (int i = 0; i < arr.Length; i++)
+            {
+                _codes.Enqueue(arr[i].Trim());
+            }
         }
 
         public void StartMonitoring()
         {
-            Thread t = new Thread(Monitor);
+            Thread t = new Thread(MonitorLevels);
             t.Start();
         }
 
@@ -37,46 +49,77 @@ namespace HttpRequest
         {
             LevelInfoSent = -1;
         }
-
-        private void Monitor()
+        
+        private void MonitorCodes()
         {
             while (true)
             {
-                var result = SendEmptyCode(true);
+                SendCode();
+                Thread.Sleep(500 + rnd.Next(10, 100));
+            }
+        }
 
-                if (LevelInfoSent == Int32.Parse(result["LevelNumber"]))
+        private void MonitorLevels()
+        {
+            while (true)
+            {
+                try
                 {
+                    var result = SendEmptyCode(true);
+
+                    if (LevelInfoSent == Int32.Parse(result["LevelNumber"]))
+                    {
+                        Thread.Sleep(3000);
+                        continue;
+                    }
+
+                    TelegramBot.SendCodeResult(result["Content"]);
+                    if (result["Coordinates"] != "" || result["Coordinates"] != null)
+                    {
+                        TelegramBot.SendCodeResult(result["Coordinates"]);
+                    }
+
+                    LevelInfoSent = Int32.Parse(result["LevelNumber"]);
+
                     Thread.Sleep(3000);
-                    continue;
                 }
-
-                TelegramBot.SendCodeResult(result["Content"]);
-
-                LevelInfoSent = Int32.Parse(result["LevelNumber"]);
-
-                Thread.Sleep(3000);
+                catch (Exception ex)
+                {
+                    TelegramBot.SendCodeResult("Error in Monitor thread, restarting... " + ex.Message);
+                }
             }
         }
 
         private void SendCode()
         {
-            var code = _codes.Dequeue();
-
-            if (_codesArchive.Contains(code))
+            try
             {
-                TelegramBot.SendCodeResult("Код *" + code + "* уже был \U0001F61C");
-                return;
+                if (_codes.Count() > 0)
+                {
+                    var code = _codes.Dequeue();
+
+                    if (_codesArchive.Contains(code))
+                    {
+                        TelegramBot.SendCodeResult("Код *" + code + "* уже был \U0001F61C");
+                        return;
+                    }
+
+                    _codesArchive.Add(code);
+
+                    var result = _postMan.SendRequest(code, Settings.LevelId, Settings.LevelNumber, false);
+
+                    UpdateLevelInfo(result);
+
+                    string isCorrect = (result["isCorrect"] == "true") ? "верный \U0001F60D" : "не верный \U0001F614";
+
+                    TelegramBot.SendCodeResult("Код *" + code + "* " + isCorrect);
+                }
             }
-
-            _codesArchive.Add(code);
-
-            var result = _postMan.SendRequest(code, Settings.LevelId, Settings.LevelNumber, false);
-
-            UpdateLevelInfo(result);
-
-            string isCorrect = (result["isCorrect"] == "true") ? "верный \U0001F60D" : "не верный \U0001F614";
-
-            TelegramBot.SendCodeResult("Код *" + code + "* " + isCorrect);
+            catch (Exception ex)
+            {
+                TelegramBot.SendCodeResult("Ooops, something went wrong while " +
+                    "sending code @ TelegramEnCommunicator.SendCode(): " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -115,7 +158,7 @@ namespace HttpRequest
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Ooops, something went wrong while parsing LevelNumber " +
+                TelegramBot.SendCodeResult("Ooops, something went wrong while parsing LevelNumber " +
                     "and LevelId from Dictionary @ TelegramENCommunicator Class. Check: " + ex.Message);
             }
         }

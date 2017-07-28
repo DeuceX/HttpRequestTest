@@ -25,9 +25,20 @@ namespace HttpRequest
             levelInfo.Add("LevelNumber", GetLevelNumber());
 
             if (needContent)
+            {
                 levelInfo.Add("Content", GetLevelContent());
+                levelInfo.Add("Coordinates", GetCoordinates(levelInfo["Content"]));
+            }
 
             return levelInfo;
+        }
+
+        private static string GetCoordinates(string content)
+        {
+            string pattern = "[0-9][0-9][.,][0-9][0-9][0-9]+,? ?[0-9][0-9][.,][0-9][0-9][0-9]+";
+            Regex rgx = new Regex(pattern);
+
+            return rgx.Match(content).ToString();
         }
 
         private static string IsCorrect()
@@ -103,41 +114,6 @@ namespace HttpRequest
                     s = s.Substring(0, s.IndexOf("//<![CDATA[")) + s.Substring(s.IndexOf("//]]>") + 5);
                 }
             }
-
-
-            // Delete \n\r\t
-            /*s = s.Substring(9);
-            s = "*" + s.Substring(0, 17) + "*" + s.Substring(25);
-            
-            // Delete script for timeout
-            if (s.Contains("//<![CDATA["))
-            {
-                s = s.Substring(0, s.IndexOf("//<![CDATA[")) + s.Substring(s.IndexOf("//]]>") + 5);
-                if (s.Contains("//<![CDATA["))
-                {
-                    s = s.Substring(0, s.IndexOf("//<![CDATA[")) + s.Substring(s.IndexOf("//]]>") + 5);
-                }
-            }
-
-            // Keys to replace with regex
-            var keys = new Dictionary<string, string>();
-            keys.Add("\r\n\t\r\n\t\r\n\t\t", String.Empty);
-            keys.Add("\\t", String.Empty);
-            keys.Add("\\r\\n", "\n");
-            keys.Add("&nbsp;", " ");
-            keys.Add("Задание", "*Задание*");
-            keys.Add("Подсказка", "*Подсказка*");
-            keys.Add("<!--end cols-->", String.Empty);
-            keys.Add("<!--end cols-wrapper -->\r\n\r\n\t\r\n\t", String.Empty);
-
-            Regex rgx;
-
-            foreach (var key in keys)
-            {
-                rgx = new Regex(key.Key);
-                s = rgx.Replace(s, key.Value);
-            }
-        */
 
             return s;
         }
