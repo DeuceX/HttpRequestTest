@@ -27,7 +27,7 @@ namespace HttpRequest
 
         public void QueueCode(string code)
         {
-            _codes.Enqueue(code);
+            _codes.Enqueue(code.Trim());
         }
 
         public void QueueCodes(string codes)
@@ -49,6 +49,15 @@ namespace HttpRequest
         {
             LevelInfoSent = -1;
         }
+
+        public void ShowSectors()
+        {
+            Dictionary<string, string> result = SendEmptyCode(true);
+
+            string sectors = result["Sectors"];
+
+            TelegramBot.SendCodeResult((sectors == "") ? "На уровне всего 1 сектор!" : sectors);
+        }
         
         private void MonitorCodes()
         {
@@ -69,7 +78,7 @@ namespace HttpRequest
 
                     if (LevelInfoSent == Int32.Parse(result["LevelNumber"]))
                     {
-                        Thread.Sleep(3000);
+                        Thread.Sleep(2500);
                         continue;
                     }
 
@@ -81,7 +90,7 @@ namespace HttpRequest
 
                     LevelInfoSent = Int32.Parse(result["LevelNumber"]);
 
-                    Thread.Sleep(3000);
+                    Thread.Sleep(2500);
                 }
                 catch (Exception ex)
                 {
@@ -108,11 +117,10 @@ namespace HttpRequest
 
                     var result = _postMan.SendRequest(code, Settings.LevelId, Settings.LevelNumber, false);
 
-                    UpdateLevelInfo(result);
-
                     string isCorrect = (result["isCorrect"] == "true") ? "верный \U0001F60D" : "не верный \U0001F614";
-
                     TelegramBot.SendCodeResult("Код *" + code + "* " + isCorrect);
+
+                    UpdateLevelNumberAndId(result);
                 }
             }
             catch (Exception ex)
@@ -128,31 +136,29 @@ namespace HttpRequest
         private Dictionary<string, string> SendEmptyCode(bool needContent)
         {
             var result = _postMan.SendRequest(String.Empty, Settings.LevelId, Settings.LevelNumber, needContent);
-            UpdateLevelInfo(result);
+            UpdateLevelNumberAndId(result);
 
             return result;
         }
-
-        private void UpdateLevelInfo(Dictionary<string, string> result)
+        
+        private void UpdateLevelNumberAndId(Dictionary<string, string> result)
         {
             try
             {
-                int LevelNumber = Settings.LevelNumber;
-                int LevelId = Settings.LevelId;
-
-                if (!Int32.TryParse(result["LevelNumber"], out LevelNumber)
-                        || !Int32.TryParse(result["LevelId"], out LevelId))
-                    return;
+                int LevelNumber = Int32.Parse(result["LevelNumber"]);
+                int LevelId = Int32.Parse(result["LevelId"]);
 
                 if (LevelNumber > Settings.LevelNumber)
                 {
-                    _codes.Clear();
-                    _codesArchive.Clear();
+                    /*
                     if (Settings.LevelNumber != 1)
                         TelegramBot.SendCodeResult("Хороши-картоши! Новый уровень!" +
                             " \U0001F389\U0001F389\U0001F389\U0001F389\U0001F389");
+                    */
+                    _codes.Clear();
+                    _codesArchive.Clear();
                 }
-                
+
                 Settings.LevelNumber = LevelNumber;
                 Settings.LevelId = LevelId;
             }

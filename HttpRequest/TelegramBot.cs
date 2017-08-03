@@ -119,6 +119,37 @@ namespace HttpRequest
                     TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot '&' action " + ex.Message);
                 }
             }
+            else if (message.Text.StartsWith("/c") || message.Text.StartsWith("/с")) /*russian and english 'c'*/
+            {
+                try
+                {
+                    if (TelEnComm == null)
+                        TelEnComm = new TelegramEnCommunicator();
+
+                    // Get the code
+                    String code = message.Text.Substring(2);
+
+                    TelEnComm.QueueCode(code);
+                }
+                catch (Exception ex)
+                {
+                    TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot '&' action " + ex.Message);
+                }
+            }
+            else if (message.Text.StartsWith("/sector"))
+            {
+                try
+                {
+                    if (TelEnComm == null)
+                        TelEnComm = new TelegramEnCommunicator();
+
+                    TelEnComm.ShowSectors();
+                }
+                catch (Exception ex)
+                {
+                    TelegramBot.SendCodeResult("Ooops, something went wrong in TelegramBot 'sector' action " + ex.Message);
+                }
+            }
             else if (message.Text.StartsWith("/monitor"))
             {
                 try
@@ -202,7 +233,8 @@ namespace HttpRequest
                     await Bot.SendPhotoAsync(message.Chat.Id, fts, "Nice Picture");
                 }
             }
-            else
+            else if (message.Text.StartsWith("/help")
+                || message.Text.StartsWith("/usage"))
             {
                 var usage = @"Usage:
 *>>> Main commands <<<*
@@ -210,12 +242,13 @@ namespace HttpRequest
 && - send several codes separated by comma
 /monitor - watch levels
 /level - get current level
+/sector - get all sectors
 *>>> Configuration commands <<<*
-/setlogin - change bot login *НЕ ТРОГАЙ :)*
-/setpassword - change bot password *НЕ ТРОГАЙ :)*
-/setdomain - change EN domain *НЕ ТРОГАЙ :)*
-/setgameid - change game id *НЕ ТРОГАЙ :)*
-/setgamefullurl - change game url *НЕ ТРОГАЙ :)*
+setlogin - change bot login *НЕ ТРОГАЙ :)*
+setpassword - change bot password *НЕ ТРОГАЙ :)*
+setdomain - change EN domain *НЕ ТРОГАЙ :)*
+setgameid - change game id *НЕ ТРОГАЙ :)*
+setgamefullurl - change game url *НЕ ТРОГАЙ :)*
 ";
 
                 await Bot.SendTextMessageAsync(message.Chat.Id, usage, ParseMode.Markdown);

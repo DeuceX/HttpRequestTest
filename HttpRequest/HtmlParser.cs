@@ -28,6 +28,8 @@ namespace HttpRequest
             {
                 levelInfo.Add("Content", GetLevelContent());
                 levelInfo.Add("Coordinates", GetCoordinates(levelInfo["Content"]));
+                levelInfo.Add("Sectors", GetSectors());
+
             }
 
             return levelInfo;
@@ -69,6 +71,8 @@ namespace HttpRequest
 
             keys.Add("<!--end cols-->", String.Empty);
             keys.Add("<!--end cols-wrapper -->", String.Empty);
+            keys.Add("<a href=\"[/]UserDetails.aspx[?]uid=[0-9]+\">", String.Empty);
+            keys.Add("</a>", String.Empty);
             keys.Add("\r\n\t\r\n\t\r\n\t\t", String.Empty);
             keys.Add("\\t", String.Empty);
             keys.Add("\\n", String.Empty);
@@ -113,6 +117,40 @@ namespace HttpRequest
                 {
                     s = s.Substring(0, s.IndexOf("//<![CDATA[")) + s.Substring(s.IndexOf("//]]>") + 5);
                 }
+            }
+
+            return s;
+        }
+
+        private static string GetSectors()
+        {
+            var t = doc.QuerySelector("div.content .cols-wrapper .cols");
+            if (t == null)
+                return "";
+
+            var s = doc.QuerySelector("div.content .cols-wrapper .cols").InnerHtml;
+
+
+            var keys = new Dictionary<string, string>();
+            
+            keys.Add("<!--end cols-->", String.Empty);
+            keys.Add("<a href=\"[/]UserDetails.aspx[?]uid=[0-9]+\">", String.Empty);
+            keys.Add("</a>", String.Empty);
+            keys.Add("\r\n\t\r\n\t\r\n\t\t", String.Empty);
+            keys.Add("\\t", String.Empty);
+            keys.Add("</span>", String.Empty);
+            keys.Add("<span.+?>", String.Empty);
+            keys.Add("\\n", String.Empty);
+            keys.Add("<p>", String.Empty);
+            keys.Add("</p>", "\n");
+            keys.Add("</div>", "\n");
+
+            Regex rgx;
+
+            foreach (var key in keys)
+            {
+                rgx = new Regex(key.Key);
+                s = rgx.Replace(s, key.Value);
             }
 
             return s;

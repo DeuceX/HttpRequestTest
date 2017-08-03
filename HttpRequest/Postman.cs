@@ -103,7 +103,7 @@ namespace HttpRequest
             request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
             request.ContentType = "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW";
             request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
-            request.Host = "demo.en.cx";
+            request.Host = Settings.GameHost;
             request.CookieContainer = new CookieContainer();
             request.Headers.Add("cache-control", "no-cache");
             request.Headers.Add("accept-language", "RU,ru;q=0.8,en-US;q=0.6,en;q=0.4,uk;q=0.2,sr;q=0.2,de;q=0.2");
