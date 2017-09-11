@@ -117,7 +117,7 @@ namespace HttpRequest
 
                     var result = _postMan.SendRequest(code, Settings.LevelId, Settings.LevelNumber, false);
 
-                    string isCorrect = (result["isCorrect"] == "true") ? "верный \U0001F60D" : "не верный \U0001F614";
+                    string isCorrect = (result["isCorrect"] == "true") ? "верный \U0001F60D\U0001F389" : "не верный \U0001F614";
                     TelegramBot.SendCodeResult("Код *" + code + "* " + isCorrect);
 
                     UpdateLevelNumberAndId(result);
@@ -150,11 +150,8 @@ namespace HttpRequest
 
                 if (LevelNumber > Settings.LevelNumber)
                 {
-                    /*
-                    if (Settings.LevelNumber != 1)
-                        TelegramBot.SendCodeResult("Хороши-картоши! Новый уровень!" +
-                            " \U0001F389\U0001F389\U0001F389\U0001F389\U0001F389");
-                    */
+                    //TelegramBot.SendCodeResult("Хороши-картоши! Новый уровень!" +
+                    //    " \U0001F389\U0001F389\U0001F389\U0001F389\U0001F389");
                     _codes.Clear();
                     _codesArchive.Clear();
                 }
