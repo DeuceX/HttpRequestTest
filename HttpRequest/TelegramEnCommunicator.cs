@@ -16,13 +16,16 @@ namespace HttpRequest
         private int LevelInfoSent = -1;
         private Random rnd = new Random();
 
+        private Thread monitoringThread;
+        private Thread communicatorThread;
+
         public TelegramEnCommunicator ()
         {
             _postMan = new Postman();
             SendEmptyCode(false);
 
-            Thread t = new Thread(MonitorCodes);
-            t.Start();
+            communicatorThread = new Thread(MonitorCodes);
+            communicatorThread.Start();
         }
 
         public void QueueCode(string code)
@@ -41,8 +44,8 @@ namespace HttpRequest
 
         public void StartMonitoring()
         {
-            Thread t = new Thread(MonitorLevels);
-            t.Start();
+            monitoringThread = new Thread(MonitorLevels);
+            monitoringThread.Start();
         }
 
         public void GetCurrentLevel()
@@ -53,12 +56,16 @@ namespace HttpRequest
         public void ShowSectors()
         {
             Dictionary<string, string> result = SendEmptyCode(true);
-
             string sectors = result["Sectors"];
-
             TelegramBot.SendCodeResult((sectors == "") ? "На уровне всего 1 сектор!" : sectors);
         }
-        
+
+        public void StopBot()
+        {
+            communicatorThread.Abort();
+            monitoringThread.Abort();
+        }
+
         private void MonitorCodes()
         {
             while (true)
@@ -95,6 +102,7 @@ namespace HttpRequest
                 catch (Exception ex)
                 {
                     TelegramBot.SendCodeResult("Error in Monitor thread, restarting... " + ex.Message);
+                    Thread.Sleep(5000);
                 }
             }
         }
@@ -103,7 +111,7 @@ namespace HttpRequest
         {
             try
             {
-                if (_codes.Count() > 0)
+                if (_codes.Any())
                 {
                     var code = _codes.Dequeue();
 

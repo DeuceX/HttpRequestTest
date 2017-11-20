@@ -9,10 +9,10 @@ namespace HttpRequest.Config
     public abstract class Settings
     {
         private static string login = "stgr";
-        private static string gameHost = "demo.en.cx";
-        private static string password = "gfvznm12";
+        private static string gameHost = "quest.ua";
+        private static string password = "gfhjkm12";
         private static string siteUrl = "http://" + gameHost + "/Login.aspx";
-        public static string gameUrl = "http://kharkov.en.cx/gameengines/encounter/play/27082";
+        public static string gameUrl = "http://quest.ua/gameengines/encounter/play/59777";
         private static int levelId = -1;
         private static int levelNumber = 1;
 

@@ -221,9 +221,7 @@ namespace HttpRequest
             else if (message.Text.StartsWith("/photo")) // send a photo
             {
                 await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
-
                 const string file = @"<FilePath>";
-
                 var fileName = file.Split('\\').Last();
 
                 using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -232,6 +230,10 @@ namespace HttpRequest
 
                     await Bot.SendPhotoAsync(message.Chat.Id, fts, "Nice Picture");
                 }
+            }
+            else if (message.Text.StartsWith("/stop"))
+            {
+                TelEnComm?.StopBot();
             }
             else if (message.Text.StartsWith("/help")
                 || message.Text.StartsWith("/usage"))
@@ -243,12 +245,9 @@ namespace HttpRequest
 /monitor - watch levels
 /level - get current level
 /sector - get all sectors
+/stop - stop bot
 *>>> Configuration commands <<<*
-setlogin - change bot login *НЕ ТРОГАЙ :)*
-setpassword - change bot password *НЕ ТРОГАЙ :)*
-setdomain - change EN domain *НЕ ТРОГАЙ :)*
-setgameid - change game id *НЕ ТРОГАЙ :)*
-setgamefullurl - change game url *НЕ ТРОГАЙ :)*
+setlogin, setpassword, setdomain, setgameid, setgamefullurl -  *НЕ ТРОГАЙ :)*
 ";
 
                 await Bot.SendTextMessageAsync(message.Chat.Id, usage, ParseMode.Markdown);

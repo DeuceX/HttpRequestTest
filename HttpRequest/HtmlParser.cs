@@ -2,9 +2,6 @@
 using System;
 using HapCss;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace HttpRequest
@@ -16,7 +13,7 @@ namespace HttpRequest
         public static Dictionary<string, string> GenerateLevelInfoFromPage(string html, string code, bool needContent)
         {
             doc.LoadHtml(html);
-
+            
             var levelInfo = new Dictionary<string, string>();
 
             levelInfo.Add("code", code);
@@ -85,13 +82,8 @@ namespace HttpRequest
             keys.Add("</h3>", "* \n");
             keys.Add("<strong>", "*");
             keys.Add("</strong>", "*");
-            keys.Add("<span>", String.Empty);
-            keys.Add("</span>", String.Empty);
-            keys.Add("<p>", String.Empty);
             keys.Add("</p>", "\n");
             keys.Add("<br>", "\n");
-            keys.Add("<span.+?>", String.Empty);
-            keys.Add("<div.+?>", String.Empty);
             keys.Add("</div>", "\n");
             keys.Add("</script>", String.Empty);
             keys.Add("<script.+>", String.Empty);
@@ -99,6 +91,8 @@ namespace HttpRequest
             keys.Add("<hr>", "--------------------------------");
             keys.Add("<b>", "*");
             keys.Add("</b>", "*");
+            keys.Add("<img", "Image:: ");
+            keys.Add("<.*?>", String.Empty);
             keys.Add("[*]Автопереход[*]", "Автопереход");
 
             Regex rgx;
