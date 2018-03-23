@@ -1,0 +1,8 @@
+C:\Qbot\HttpRequestTest\QB.Telegram\bin\Debug\netcoreapp2.0\QB.Telegram.deps.json
+C:\Qbot\HttpRequestTest\QB.Telegram\bin\Debug\netcoreapp2.0\QB.Telegram.runtimeconfig.json
+C:\Qbot\HttpRequestTest\QB.Telegram\bin\Debug\netcoreapp2.0\QB.Telegram.runtimeconfig.dev.json
+C:\Qbot\HttpRequestTest\QB.Telegram\bin\Debug\netcoreapp2.0\QB.Telegram.dll
+C:\Qbot\HttpRequestTest\QB.Telegram\obj\Debug\netcoreapp2.0\QB.Telegram.csprojResolveAssemblyReference.cache
+C:\Qbot\HttpRequestTest\QB.Telegram\obj\Debug\netcoreapp2.0\QB.Telegram.csproj.CoreCompileInputs.cache
+C:\Qbot\HttpRequestTest\QB.Telegram\obj\Debug\netcoreapp2.0\QB.Telegram.AssemblyInfoInputs.cache
+C:\Qbot\HttpRequestTest\QB.Telegram\obj\Debug\netcoreapp2.0\QB.Telegram.AssemblyInfo.cs
